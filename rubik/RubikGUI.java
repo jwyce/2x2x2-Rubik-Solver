@@ -51,7 +51,6 @@ public class RubikGUI extends JFrame {
 		solution.setFont(new Font("Ariel", Font.BOLD, 20));
 		solution.setSize(500, 80);
 		solution.setLocation(440, 110);
-		//solution.setText("Antidisestablishmentarianism");
 		
 		rubiknet.add(solve);
 		rubiknet.add(input);

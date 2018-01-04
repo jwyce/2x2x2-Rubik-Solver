@@ -61,17 +61,6 @@ public class RubikState {
 	private static int[] R = {0,9,10,3,4,5,6,7,8,17,18,11,15,12,13,14,16,23,20,19,2,21,22,1};
 	private static int[] Ri = perm_inverse(R);
 	
-	public static HashMap<int[], String> quarter_twists() {
-		HashMap<int[], String> quarter_twists = new HashMap<>();
-		quarter_twists.put(F, "F");
-		quarter_twists.put(Fi, "F'");
-		quarter_twists.put(U, "U");
-		quarter_twists.put(Ui, "U'");
-		quarter_twists.put(R, "R");
-		quarter_twists.put(Ri, "R'");
-		return quarter_twists;
-	}
-	
 	public static int[] perm_inverse(int[] p) {
 		int n = p.length;
 		int[] g = new int[n];

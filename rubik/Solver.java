@@ -36,6 +36,7 @@ public class Solver {
 		Queue<RubikState> queue = new LinkedList<RubikState>();
 		parents.put(source, null);
 		queue.add(source);
+		
 		while (!queue.isEmpty()) {
 			source = queue.remove();
 			for (Entry<String, RubikState> move : source.getReachableStates().entrySet()) {
@@ -43,11 +44,11 @@ public class Solver {
 					parents.put(move.getValue(), move.getKey());
 					queue.add(move.getValue());
 				}
-				if (move.getValue().equals(destination)) { 
+				if (move.getValue().equals(destination))
 					return parents;
-				}
 			}
 		}
+		
 		return null;
 	}
 

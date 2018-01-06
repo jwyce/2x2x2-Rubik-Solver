@@ -94,9 +94,9 @@ public class RubikState {
 		moves.put(name, state);
 	}
 	
-	public void scramble(String scramble) {
-		if (scramble == null) return;
-		String[] moves = scramble.toUpperCase().split(" ");
+	public void execute_move_seq(String seq) {
+		if (seq == null) return;
+		String[] moves = seq.toUpperCase().split(" ");
 		for (String move : moves) {
 			switch(move) {
 			case "F":

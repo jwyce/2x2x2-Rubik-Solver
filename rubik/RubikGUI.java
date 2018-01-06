@@ -61,7 +61,7 @@ public class RubikGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			solution.setText(Solver.shortestPath(rubiknet.state));
-			rubiknet.state.scramble(solution.getText());
+			rubiknet.state.execute_move_seq(solution.getText());
 			rubiknet.repaint();
 		}
 	};
@@ -70,7 +70,7 @@ public class RubikGUI extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			String scramble = e.getActionCommand();
 			if (scramble.matches("[furFUR]['2]?( [furFUR]['2]?)*")) {
-				rubiknet.state.scramble(scramble);
+				rubiknet.state.execute_move_seq(scramble);
 				rubiknet.repaint();
 			} else {
 				JOptionPane.showMessageDialog(null, "Please try again.", "Not Official WCA Scramble!", JOptionPane.ERROR_MESSAGE);

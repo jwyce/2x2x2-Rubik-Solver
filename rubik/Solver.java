@@ -20,12 +20,12 @@ public class Solver {
 		HashMap<RubikState, String> parents = bfs_visit(new RubikState(), state);
 		String solutionPath = parents.get(state);
 		RubikState next = new RubikState(state.positions);
-		next.scramble(solutionPath);
+		next.execute_move_seq(solutionPath);
 		
 		while (parents.get(next) != null) {
 			solutionPath += " " + parents.get(next);
 			next = new RubikState(state.positions);
-			next.scramble(solutionPath);
+			next.execute_move_seq(solutionPath);
 			
 		}
 		

@@ -26,7 +26,6 @@ public class Solver {
 			solutionPath += " " + parents.get(next);
 			next = new RubikState(state.positions);
 			next.execute_move_seq(solutionPath);
-			
 		}
 		
 		return solutionPath.replaceAll("(([RUF])'?) \\1", "$22");

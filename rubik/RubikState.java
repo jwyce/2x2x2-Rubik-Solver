@@ -103,7 +103,7 @@ public class RubikState {
 				positions = perm_apply(F);
 				break;
 			case "F'":
-				positions = perm_apply(perm_inverse(F));
+				positions = perm_apply(Fi);
 				break;
 			case "F2":
 				positions = perm_apply(F);
@@ -113,7 +113,7 @@ public class RubikState {
 				positions = perm_apply(U);
 				break;
 			case "U'":
-				positions = perm_apply(perm_inverse(U));
+				positions = perm_apply(Ui);
 				break;
 			case "U2":
 				positions = perm_apply(U);
@@ -123,7 +123,7 @@ public class RubikState {
 				positions = perm_apply(R);
 				break;
 			case "R'":
-				positions = perm_apply(perm_inverse(R));
+				positions = perm_apply(Ri);
 				break;
 			case "R2":
 				positions = perm_apply(R);

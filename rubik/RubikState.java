@@ -13,7 +13,7 @@ public class RubikState {
 	 * b - blue
 	 * o - orange
 	 * r - red
-	 * each consecutive 4 indeces are a face labeled starting from
+	 * each consecutive 4 indices are a face labeled starting from
 	 * top left going around clockwise
 	 * i:0-3 top face
 	 * i:4-7 left face

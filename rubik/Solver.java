@@ -29,7 +29,7 @@ public class Solver {
 			
 		}
 		
-		return solutionPath.replaceAll("([RUF]'?) \\1", "$12");
+		return solutionPath.replaceAll("(([RUF])'?) \\1", "$22");
 	}
 	
 	private static HashMap<RubikState, String> bfs_visit(RubikState source, RubikState destination) {

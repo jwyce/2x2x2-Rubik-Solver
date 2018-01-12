@@ -7,6 +7,8 @@ import java.util.Queue;
 
 public class Solver {
 
+	private static HashMap<RubikState, String> parents = new HashMap<>();
+	
 	public static void main(String[] args) {
 		new RubikGUI();
 	}
@@ -17,7 +19,7 @@ public class Solver {
 	 * (the diameter of a 2x2x2 state graph is 14 if half twists count as 2 moves, 11 otherwise)
 	 */
 	public static String shortestPath(RubikState state) {
-		HashMap<RubikState, String> parents = bfs_visit(new RubikState(), state);
+		bfs_visit(new RubikState(), state);
 		String solutionPath = parents.get(state);
 		RubikState next = new RubikState(state.positions);
 		next.execute_move_seq(solutionPath);
@@ -31,8 +33,7 @@ public class Solver {
 		return solutionPath.replaceAll("(([RUF])'?) \\1", "$22");
 	}
 	
-	private static HashMap<RubikState, String> bfs_visit(RubikState source, RubikState destination) {
-		HashMap<RubikState, String> parents = new HashMap<>();
+	private static void bfs_visit(RubikState source, RubikState destination) {
 		Queue<RubikState> queue = new LinkedList<RubikState>();
 		parents.put(source, null);
 		queue.add(source);
@@ -45,11 +46,9 @@ public class Solver {
 					queue.add(move.getValue());
 				}
 				if (move.getValue().equals(destination))
-					return parents;
+					return;
 			}
 		}
-		
-		return null;
 	}
 
 }

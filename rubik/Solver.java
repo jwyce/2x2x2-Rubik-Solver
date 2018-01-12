@@ -6,8 +6,6 @@ import java.util.Map.Entry;
 import java.util.Queue;
 
 public class Solver {
-
-	private static HashMap<RubikState, String> parents = new HashMap<>();
 	
 	public static void main(String[] args) {
 		new RubikGUI();
@@ -17,10 +15,9 @@ public class Solver {
 	 * Implements a breadth-first search on the RubikState implicit graph
 	 * returns the shortest path (solution) which is under 11 moves
 	 * (the diameter of a 2x2x2 state graph is 14 if half twists count as 2 moves, 11 otherwise)
-	 * 
 	 */
 	public static String shortestPath(RubikState state) {
-		bfs_visit(new RubikState(), state);
+		HashMap<RubikState, String> parents = bfs_visit(new RubikState(), state);
 		String solutionPath = parents.get(state);
 		RubikState next = new RubikState(state.positions);
 		next.execute_move_seq(solutionPath);
@@ -34,7 +31,8 @@ public class Solver {
 		return solutionPath.replaceAll("(([RUF])'?) \\1", "$22");
 	}
 	
-	private static void bfs_visit(RubikState source, RubikState destination) {
+	private static HashMap<RubikState, String> bfs_visit(RubikState source, RubikState destination) {
+		HashMap<RubikState, String> parents = new HashMap<>();
 		Queue<RubikState> queue = new LinkedList<RubikState>();
 		parents.put(source, null);
 		queue.add(source);
@@ -47,9 +45,11 @@ public class Solver {
 					queue.add(move.getValue());
 				}
 				if (move.getValue().equals(destination))
-					return;
+					return parents;
 			}
 		}
+		
+		return null;
 	}
 
 }

@@ -17,6 +17,7 @@ public class Solver {
 	 * Implements a breadth-first search on the RubikState implicit graph
 	 * returns the shortest path (solution) which is under 11 moves
 	 * (the diameter of a 2x2x2 state graph is 14 if half twists count as 2 moves, 11 otherwise)
+	 * 
 	 */
 	public static String shortestPath(RubikState state) {
 		bfs_visit(new RubikState(), state);

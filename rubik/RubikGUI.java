@@ -17,7 +17,7 @@ public class RubikGUI extends JFrame {
 	private RubikNet rubiknet = new RubikNet(new RubikState());
 	private JButton solve = new JButton("Solve!");
 	private JTextField input = new JTextField(1);
-	private JLabel solution = new JLabel();
+	private JLabel solution = new JLabel(), time = new JLabel();
 	
 	public RubikGUI() {
 		this.buildFrame();
@@ -49,18 +49,24 @@ public class RubikGUI extends JFrame {
 		input.setLocation(440, 90);
 		
 		solution.setFont(new Font("Ariel", Font.BOLD, 20));
-		solution.setSize(500, 80);
-		solution.setLocation(440, 110);
+		solution.setSize(500, 30);
+		solution.setLocation(440, 125);
+		time.setFont(new Font("Ariel", Font.BOLD, 20));
+		time.setSize(500, 30);
+		time.setLocation(440, 150);
 		
 		rubiknet.add(solve);
 		rubiknet.add(input);
 		rubiknet.add(solution);
+		rubiknet.add(time);
 	}
 	
 	ActionListener buttonListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			long startTime = System.currentTimeMillis();
 			solution.setText(Solver.shortestPath(rubiknet.state));
+			time.setText("time elapsed: " + (System.currentTimeMillis() - startTime)/1000 + "s.");
 			rubiknet.state.execute_move_seq(solution.getText());
 			rubiknet.repaint();
 		}

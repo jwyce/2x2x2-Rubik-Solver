@@ -18,6 +18,7 @@ public class RubikGUI extends JFrame {
 	private JButton solve = new JButton("Solve!");
 	private JTextField input = new JTextField(1);
 	private JLabel solution = new JLabel(), time = new JLabel();
+	private boolean isScrambled = false;
 	
 	public RubikGUI() {
 		this.buildFrame();
@@ -64,11 +65,14 @@ public class RubikGUI extends JFrame {
 	ActionListener buttonListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			long startTime = System.currentTimeMillis();
-			solution.setText(Solver.shortestPath(rubiknet.state));
-			time.setText("time elapsed: " + (System.currentTimeMillis() - startTime)/1000 + "s.");
-			rubiknet.state.execute_move_seq(solution.getText());
-			rubiknet.repaint();
+		    if (isScrambled) {
+		        long startTime = System.currentTimeMillis();
+	            solution.setText(Solver.solve(rubiknet.state));
+	            time.setText("time elapsed: " + (System.currentTimeMillis() - startTime) + "ms.");
+	            rubiknet.state.executeMoveSeq(solution.getText());
+	            rubiknet.repaint();
+	            isScrambled = false;
+		    }
 		}
 	};
 	ActionListener inputListtener = new ActionListener() {
@@ -76,8 +80,9 @@ public class RubikGUI extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			String scramble = e.getActionCommand();
 			if (scramble.matches("[furFUR]['2]?( [furFUR]['2]?)*")) {
-				rubiknet.state.execute_move_seq(scramble);
+				rubiknet.state.executeMoveSeq(scramble);
 				rubiknet.repaint();
+				isScrambled = true;
 			} else {
 				JOptionPane.showMessageDialog(null, "Please try again.", "Not Official WCA Scramble!", JOptionPane.ERROR_MESSAGE);
 			}

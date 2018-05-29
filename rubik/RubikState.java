@@ -55,13 +55,13 @@ public class RubikState {
 	 * U' - up counter clockwise
 	 */
 	private static int[] F = {0,1,5,6,4,16,17,7,11,8,9,10,3,13,14,2,15,12,18,19,20,21,22,23};
-	private static int[] Fi = perm_inverse(F);
+	private static int[] Fi = permInverse(F);
 	private static int[] U = {3,0,1,2,8,9,6,7,12,13,10,11,20,21,14,15,16,17,18,19,4,5,22,23};
-	private static int[] Ui = perm_inverse(U);
+	private static int[] Ui = permInverse(U);
 	private static int[] R = {0,9,10,3,4,5,6,7,8,17,18,11,15,12,13,14,16,23,20,19,2,21,22,1};
-	private static int[] Ri = perm_inverse(R);
+	private static int[] Ri = permInverse(R);
 	
-	public static int[] perm_inverse(int[] p) {
+	public static int[] permInverse(int[] p) {
 		int n = p.length;
 		int[] g = new int[n];
 		for (int i = 1; i < n; i++) {
@@ -70,7 +70,7 @@ public class RubikState {
 		return g;
 	}
 
-	public char[] perm_apply(int[] perm) {
+	public char[] permApply(int[] perm) {
 		char[] newPositions = new char[24];
 		for (int i = 0; i < 24; i++) {
 			newPositions[i] = positions[perm[i]];
@@ -90,44 +90,44 @@ public class RubikState {
 	}
 	
 	private void addBasicMove(String name, int[] perm, HashMap<String, RubikState> moves) {
-		RubikState state = new RubikState(perm_apply(perm));
+		RubikState state = new RubikState(permApply(perm));
 		moves.put(name, state);
 	}
 	
-	public void execute_move_seq(String seq) {
+	public void executeMoveSeq(String seq) {
 		if (seq == null) return;
 		String[] moves = seq.toUpperCase().split(" ");
 		for (String move : moves) {
 			switch(move) {
 			case "F":
-				positions = perm_apply(F);
+				positions = permApply(F);
 				break;
 			case "F'":
-				positions = perm_apply(Fi);
+				positions = permApply(Fi);
 				break;
 			case "F2":
-				positions = perm_apply(F);
-				positions = perm_apply(F);
+				positions = permApply(F);
+				positions = permApply(F);
 				break;
 			case "U":
-				positions = perm_apply(U);
+				positions = permApply(U);
 				break;
 			case "U'":
-				positions = perm_apply(Ui);
+				positions = permApply(Ui);
 				break;
 			case "U2":
-				positions = perm_apply(U);
-				positions = perm_apply(U);
+				positions = permApply(U);
+				positions = permApply(U);
 				break;
 			case "R":
-				positions = perm_apply(R);
+				positions = permApply(R);
 				break;
 			case "R'":
-				positions = perm_apply(Ri);
+				positions = permApply(Ri);
 				break;
 			case "R2":
-				positions = perm_apply(R);
-				positions = perm_apply(R);
+				positions = permApply(R);
+				positions = permApply(R);
 				break;
 			}
 		}

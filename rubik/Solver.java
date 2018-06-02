@@ -41,6 +41,7 @@ public class Solver {
                     backwardParents.put(move.getValue(), move.getKey()); 
                     bqueue.add(move.getValue());
                 }
+                // same state discovered in both ends of search
                 if (forwardParents.containsKey(move.getValue())) {
                     String endpath = path(move.getValue(), forwardParents);
                     String srcpath = path(move.getValue(), backwardParents);
@@ -56,6 +57,7 @@ public class Solver {
 	private static String reverse(String path) {
 	    path += " ";
 	    String reverse = "";
+	    
         for (int i = 0; i < path.length(); i++) {
             if (path.charAt(i) == ' ')
                 reverse += "' ";
@@ -66,12 +68,14 @@ public class Solver {
                 i++;
             }
         }
+        
         String ar[] = reverse.split(" ");
         for (int i = 0; i < ar.length/2; i++) {
             String temp = ar[i];
             ar[i] = ar[ar.length-1-i];
             ar[ar.length-1-i] = temp;
         }
+        
         return String.join(" ", ar);
 	}
 	

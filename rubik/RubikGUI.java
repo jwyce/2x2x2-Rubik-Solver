@@ -2,23 +2,23 @@ package rubik;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 public class RubikGUI extends JFrame {
 
 	private static final long serialVersionUID = -4226981410944431646L;
 	private RubikNet rubiknet = new RubikNet(new RubikState());
-	private JButton solve = new JButton("Solve!");
-	private JTextField input = new JTextField(1);
+	private JButton solve = new JButton("Solve");
+	private JButton randomize = new JButton("Randomize");
+	private JButton reset = new JButton("Reset");
 	private JLabel solution = new JLabel(), time = new JLabel();
-	private boolean isScrambled = false;
+	private JLabel scramble = new JLabel();
 	
 	public RubikGUI() {
 		this.buildFrame();
@@ -36,58 +36,132 @@ public class RubikGUI extends JFrame {
 	}
 	
 	private void addComponents() {
-		solve.setFont(new Font("Impact", Font.PLAIN, 22));
-		solve.addActionListener(buttonListener);
-		solve.setSize(100, 50);
-		solve.setLocation(460, 25);
+		solve.setFont(new Font("Segoe UI", Font.BOLD, 16));
+		solve.setBackground(Color.GRAY.darker());
+		solve.setForeground(Color.WHITE);
+		solve.setBorder(new LineBorder(Color.gray.darker().darker(), 1));
+		solve.addMouseListener(solveButtonListener);
+		solve.setFocusable(false);
+		solve.setSize(100, 35);
+		solve.setLocation(430, 70);
 		
-		input.setFont(new Font("Ariel", Font.PLAIN, 16));
-		input.setBackground(Color.GRAY.darker());
-		input.setForeground(Color.WHITE);
-		input.setText("Enter Scramble Here");
-		input.addActionListener(inputListtener);
-		input.setSize(300, 30);
-		input.setLocation(440, 90);
+		randomize.setFont(new Font("Segoe UI", Font.BOLD, 16));
+		randomize.setBackground(Color.GRAY.darker());
+		randomize.setForeground(Color.WHITE);
+		randomize.setBorder(new LineBorder(Color.gray.darker().darker(), 1));
+		randomize.addMouseListener(randomButtonListener);
+		randomize.setFocusable(false);
+		randomize.setSize(100, 35);
+		randomize.setLocation(550, 70);
 		
-		solution.setFont(new Font("Ariel", Font.BOLD, 20));
+		reset.setFont(new Font("Segoe UI", Font.BOLD, 16));
+		reset.setBackground(Color.GRAY.darker());
+        reset.setForeground(Color.WHITE);
+        reset.setBorder(new LineBorder(Color.gray.darker().darker(), 1));
+        reset.addMouseListener(resetButtonListener);
+        reset.setFocusable(false);
+        reset.setSize(100, 35);
+        reset.setLocation(670, 70);
+		
+        scramble.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        scramble.setSize(500, 30);
+        scramble.setForeground(Color.WHITE);
+        scramble.setLocation(420, 125);
+		solution.setFont(new Font("Segoe UI", Font.BOLD, 16));
 		solution.setSize(500, 30);
-		solution.setLocation(440, 125);
-		time.setFont(new Font("Ariel", Font.BOLD, 20));
+		solution.setForeground(Color.WHITE);
+		solution.setLocation(420, 150);
+		time.setFont(new Font("Segoe UI", Font.BOLD, 16));
 		time.setSize(500, 30);
-		time.setLocation(440, 150);
+		time.setForeground(Color.WHITE);
+		time.setLocation(420, 175);
 		
 		rubiknet.add(solve);
-		rubiknet.add(input);
+		rubiknet.add(randomize);
+		rubiknet.add(reset);
+		rubiknet.add(scramble);
 		rubiknet.add(solution);
 		rubiknet.add(time);
 	}
 	
-	ActionListener buttonListener = new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-		    if (isScrambled) {
-		        long startTime = System.currentTimeMillis();
-	            solution.setText(Solver.solve(rubiknet.state));
-	            time.setText("time elapsed: " + (System.currentTimeMillis() - startTime) + "ms.");
-	            rubiknet.state.executeMoveSeq(solution.getText());
-	            rubiknet.repaint();
-	            isScrambled = false;
-		    }
-		}
-	};
-	ActionListener inputListtener = new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			String scramble = e.getActionCommand();
-			if (scramble.matches("[furFUR]['2]?( [furFUR]['2]?)*")) {
-				rubiknet.state.executeMoveSeq(scramble);
-				rubiknet.repaint();
-				isScrambled = true;
-			} else {
-				JOptionPane.showMessageDialog(null, "Please try again.", "Not Official WCA Scramble!", JOptionPane.ERROR_MESSAGE);
-			}
-		}
+	MouseListener solveButtonListener = new MouseListener() {
+        @Override
+        public void mouseClicked(MouseEvent e) {}
+
+        @Override
+        public void mousePressed(MouseEvent e) {}
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            
+            long startTime = System.currentTimeMillis();
+            solution.setText("solution: " + Solver.solve(rubiknet.state));
+            time.setText("time elapsed: " + (System.currentTimeMillis() - startTime) + "ms.");
+            rubiknet.state.executeMoveSeq(solution.getText());
+            rubiknet.repaint();
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            solve.setBackground(new Color(117, 117, 117));
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            solve.setBackground(Color.GRAY.darker());
+        }
 	};
 	
-	
+	MouseListener randomButtonListener = new MouseListener() {
+        @Override
+        public void mouseClicked(MouseEvent e) {}
+
+        @Override
+        public void mousePressed(MouseEvent e) {}
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            scramble.setText("scramble: " + rubiknet.state.randomize());
+            solution.setText("");
+            time.setText("");
+            rubiknet.repaint();
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            randomize.setBackground(new Color(117, 117, 117));
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            randomize.setBackground(Color.GRAY.darker());
+        }
+    };
+    
+    MouseListener resetButtonListener = new MouseListener() {
+        @Override
+        public void mouseClicked(MouseEvent e) {}
+
+        @Override
+        public void mousePressed(MouseEvent e) {}
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            rubiknet.state = new RubikState();
+            scramble.setText("");
+            solution.setText("");
+            time.setText("");
+            rubiknet.repaint();
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            reset.setBackground(new Color(117, 117, 117));
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            reset.setBackground(Color.GRAY.darker());
+        }
+    };
 }

@@ -6,14 +6,16 @@ import java.util.Map.Entry;
 
 public class Solver {
 	
+    public static final int GODS_NUMBER = 14;
+    
 	public static void main(String[] args) {
 		new RubikGUI();
 	}
 	
 	/*
      * Implements a 2-way breadth-first search on the RubikState implicit graph
-     * returns the shortest path (solution) which is under 11 moves
-     * (the diameter of a 2x2x2 state graph is 11 if half twists count as a single move, 14 if they count as two)
+     * returns the shortest path (solution) which is under 20 moves
+     * (the diameter of a 2x2x2 state graph is 14)
      */
 	public static String solve(RubikState state) {
 	    HashMap<RubikState, String> forwardParents = new HashMap<RubikState, String>();
@@ -24,33 +26,51 @@ public class Solver {
 	    forwardParents.put(end, null);
 	    backwardParents.put(src, null);
 	    fqueue.add(end);
+	    fqueue.add(new RubikState(true));
 	    bqueue.add(src);
 	    
+	    // check if cube already solved
+	    if (end.equals(src))
+	        return "Already solved";
+	    
 	    // bfs visit from both ends of graph
-	    while (true) {
-	        end = fqueue.remove();
-            for (Entry<String, RubikState> move : end.getReachableStates().entrySet()) {
-                if (!forwardParents.containsKey(move.getValue())) {
-                    forwardParents.put(move.getValue(), move.getKey()); 
-                    fqueue.add(move.getValue());
-                }
-            }
-            src = bqueue.remove();
-            for (Entry<String, RubikState> move : src.getReachableStates().entrySet()) {
-                if (!backwardParents.containsKey(move.getValue())) {
-                    backwardParents.put(move.getValue(), move.getKey()); 
-                    bqueue.add(move.getValue());
-                }
-                // same state discovered in both ends of search
-                if (forwardParents.containsKey(move.getValue())) {
-                    String endpath = path(move.getValue(), forwardParents);
-                    String srcpath = path(move.getValue(), backwardParents);
-                    srcpath = reverse(srcpath);
-                    String solutionPath = srcpath + " " + endpath;
-                    return solutionPath.replaceAll("(([RUF])'?) \\1", "$22");
-                }
-            }
+	    int graphRadius = GODS_NUMBER/2;
+	    for (int i = 0; i <= graphRadius; i++)
+	    {
+	        while (true) {
+	            end = fqueue.remove();
+	            if (end.isNullState) {
+	                fqueue.add(new RubikState(true));
+	                break;
+	            }
+	            
+	            for (Entry<String, RubikState> move : end.getReachableStates().entrySet()) {
+	                if (!forwardParents.containsKey(move.getValue())) {
+	                    forwardParents.put(move.getValue(), move.getKey()); 
+	                    fqueue.add(move.getValue());
+	                }
+	            }
+	            
+	            src = bqueue.remove();
+	            
+	            for (Entry<String, RubikState> move : src.getReachableStates().entrySet()) {
+	                if (!backwardParents.containsKey(move.getValue())) {
+	                    backwardParents.put(move.getValue(), move.getKey()); 
+	                    bqueue.add(move.getValue());
+	                }
+	                // same state discovered in both ends of search
+	                if (forwardParents.containsKey(move.getValue())) {
+	                    String endpath = path(move.getValue(), forwardParents);
+	                    String srcpath = path(move.getValue(), backwardParents);
+	                    srcpath = reverse(srcpath);
+	                    String solutionPath = srcpath + " " + endpath;
+	                    return solutionPath.replaceAll("(([RUF])'?) \\1", "$22");
+	                }
+	            }
+	        }
         }
+	    
+	    return "No solution, impossible configuration";
 	   
 	}
 	

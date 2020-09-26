@@ -2,6 +2,7 @@ package rubik;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Random;
 
 public class RubikState {
 
@@ -23,6 +24,7 @@ public class RubikState {
 	 * i:20-23 back face
 	 */
 	char[] positions;
+	boolean isNullState;
 	
 	public RubikState() {
 		// create a solved cube
@@ -39,11 +41,17 @@ public class RubikState {
 			positions[i] = 'y';
 		for (int i = 20; i < 24; i++)
 			positions[i] = 'b';
+		this.isNullState = false;
 	}
 	
 	public RubikState(char[] positions) {
 		this.positions = positions;
+		this.isNullState = false;
 	}
+	
+	public RubikState(boolean nullState) {
+        this.isNullState = nullState;
+    }
 	
 	/**
 	 * Permutations (Moves) show how the positions array indeces move
@@ -55,11 +63,11 @@ public class RubikState {
 	 * U' - up counter clockwise
 	 */
 	private static int[] F = {0,1,5,6,4,16,17,7,11,8,9,10,3,13,14,2,15,12,18,19,20,21,22,23};
-	private static int[] Fi = permInverse(F);
-	private static int[] U = {3,0,1,2,8,9,6,7,12,13,10,11,20,21,14,15,16,17,18,19,4,5,22,23};
-	private static int[] Ui = permInverse(U);
-	private static int[] R = {0,9,10,3,4,5,6,7,8,17,18,11,15,12,13,14,16,23,20,19,2,21,22,1};
-	private static int[] Ri = permInverse(R);
+    private static int[] Fi = permInverse(F);
+    private static int[] U = {3,0,1,2,8,9,6,7,12,13,10,11,20,21,14,15,16,17,18,19,4,5,22,23};
+    private static int[] Ui = permInverse(U);
+    private static int[] R = {0,9,10,3,4,5,6,7,8,17,18,11,15,12,13,14,16,23,20,19,2,21,22,1};
+    private static int[] Ri = permInverse(R);
 	
 	public static int[] permInverse(int[] p) {
 		int n = p.length;
@@ -131,6 +139,39 @@ public class RubikState {
 				break;
 			}
 		}
+	}
+	
+	public int getRandomWithExclusion(Random rnd, int start, int end, int... exclude) {
+	    int random = start + rnd.nextInt(end - start + 1 - exclude.length);
+	    for (int ex : exclude) {
+	        if (random < ex) {
+	            break;
+	        }
+	        random++;
+	    }
+	    return random;
+	}
+	
+	public String randomize() {
+	    String scramble = "";
+	    Random rand = new Random();
+	    int prevMoveGroup = -1;
+	    String[][] moves = {
+	            {"F", "F'", "F2"}, 
+	            {"U", "U'", "U2"}, 
+	            {"R", "R'", "R2"}
+	    };
+	    
+	    for (int i = 0; i < 17; i++) {
+	        prevMoveGroup = getRandomWithExclusion(rand, 0, moves.length - 1, prevMoveGroup);
+	        String move = moves[prevMoveGroup][rand.nextInt(moves[0].length)];
+	        scramble += move + " ";
+	    }
+	    
+	    scramble = scramble.substring(0, scramble.length() - 2);
+	    executeMoveSeq(scramble);
+	    
+	    return scramble;
 	}
 	
 	@Override
